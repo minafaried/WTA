@@ -23,18 +23,19 @@ def fitness_and_selection(population,threat_coeff, success_probabilities,selecti
     for i in range(0,len(population)):
         fitnessProcess = 0
         for j in range(0,len(population[i])):
-            fitnessProcess += population[i][j] * threat_coeff * success_probablilities[i][j]
+            fitnessProcess += population[i][j] * threat_coeff * success_probabilities[i][j]
         fitness.append(1/fitnessProcess)
-        commulativeFitness[0] = fitness[0]
-        for k in range(1,len(fitnessProcess-1)):
-            addProccess = comulativeFitness[k - 1] + fitness[k]
-            commulativeFitness.append(addProccess)
-        for h in range(0, selectionNumber):
-            randomNumber = random.randrange(0, commulativeFitness[len(commulativeFitness)])
-            for m in range(0, len(commulativeFitness)):
-                if randmonNumber < commulativeFitness[m]:
-                    selection.append(population[0][m])
-        return selection
+    commulativeFitness.append(fitness[0])
+    for k in range(1,len(fitness)):
+        addProccess = commulativeFitness[k - 1] + fitness[k]
+        commulativeFitness.append(addProccess)
+    for h in range(0, selectionNumber):
+        rangeEnd = len(commulativeFitness) - 1
+        randomNumber = random.uniform(0, commulativeFitness[rangeEnd])
+        for m in range(0, len(commulativeFitness)):
+            if randomNumber < commulativeFitness[m]:
+                selection.append(population[m])
+    return selection
 
 def crossover(selection):
     crossOver = []
