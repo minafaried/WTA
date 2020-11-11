@@ -17,14 +17,14 @@ def fitness_and_selection(population,threat_coeff, success_probabilities,selecti
     if selectionNumber %2 != 0:
         print("Selection Must be EVEN")
         pass
-    fitness[]
-    commulativeFitness[]
-    selection[[]]
+    fitness = []
+    commulativeFitness = []
+    selection = [[]]
     for i in range(0,len(population)):
         fitnessProcess = 0
         for j in range(0,len(population[i])):
             fitnessProcess += population[i][j] * threat_coeff * success_probablilities[i][j]
-        fitness.append(1\fitnessProcess)
+        fitness.append(1/fitnessProcess)
         commulativeFitness[0] = fitness[0]
         for k in range(1,len(fitnessProcess-1)):
             addProccess = comulativeFitness[k - 1] + fitness[k]
@@ -37,16 +37,16 @@ def fitness_and_selection(population,threat_coeff, success_probabilities,selecti
         return selection
 
 def crossover(selection):
-    crossOver[[]]
-    tempArray1[]
-    tempArray2[]
-    for i range(0,len(selection)):
+    crossOver = [[]]
+    tempArray1 = []
+    tempArray2 = []
+    for i in range(0,len(selection)):
         randomNumber = random.randomrange(0,(len(selection[i])-1))
         for j in range (0,randomNumber):
             tempArray1.append(selection[i][j])
             tempArray2.append(selection[i+1][j])
         for k in range (randomNumber, len(selection(i))):
-            tempArray1.append(selection[i+1][k]))
+            tempArray1.append(selection[i+1][k])
             tempArray2.append(selection[i][k])
         i+2
         crossOver.append(tempArray1)
