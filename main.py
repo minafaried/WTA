@@ -1,5 +1,8 @@
 import random
 import numpy as np
+#test for replacment & check
+matrix = np.matrix('0.7 0.6 0.5; 0.1 0.5 0.4; 0.3 0.2 0.2')
+target_num=1
 
 tank1 = []
 def init(population_num, weapon_num):
@@ -11,8 +14,22 @@ def init(population_num, weapon_num):
             chromosome.append(r)
         population.append(chromosome)
     return population
-def check(population):
-    pass
+def check(population , target_num):
+    #selecting the coloumn of the target
+    target_col = np.array( matrix[:,[target_num-1]])
+    target_prop=[]
+    for x in range(0,len(target_col)):
+        target_prop.append(target_col[x][0])
+    result_population=[]
+    propSum = 0
+    for i in range(0,len(population)):
+        for j in range (0,len(population[i])):
+            if(population[i][j] == 1):
+                propSum += target_prop[j]
+        if(propSum <= 1):
+            result_population.append(population[i])
+        propSum =0
+    return result_population
 def fitness_and_selection(population,threat_coeff, success_probabilities,selectionNumber):
     if selectionNumber %2 != 0:
         print("Selection Must be EVEN")
@@ -62,7 +79,36 @@ def mutation(bit_filp,crossover):
                 crossover[i][j]=abs(crossover[i][j]-1)
     return crossover
 def replacement(population,mutation):
-    pass
+    #selecting the coloumn of the target
+    target_col = np.array( matrix[:,[target_num-1]])
+    target_prop=[]
+    for x in range(0,len(target_col)):
+        target_prop.append(target_col[x][0])
+    
+    new_gen=[]
+    pSum=0
+    cSum=0
+    #assume that length of mutation(children) is less than population(parents)
+    for i  in range(0,len(population)):
+        for j in range (0,len(population[i])):
+            #calc the total propabilty of the parent
+            if(population[i][j] == 1):
+                pSum += target_prop[j]
+            for x in range(0,len(mutation)):
+                for y in range(0,len(mutation[x])):
+                    #calc the total propabilty
+                    if(mutation[x][y] == 1):
+                        cSum += target_prop[y]
+                if(pSum > cSum):
+                        new_gen.append(population[i])
+                        population.pop(i)
+                        pSum = 0
+                else:
+                        new_gen.append(mutation[x])
+                        mutation.pop(x)
+                        cSum = 0
+              
+    return new_gen
 
 def genetic_algo(weapons_types_num,weapon_num_for_type, weapons, target_num, target_coeffs, success_probabilities):
     population_num=7
