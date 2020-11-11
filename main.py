@@ -30,13 +30,18 @@ def mutation(bit_filp,crossover):
 def replacement(population,mutation):
     pass
 
-def genetic_algo(weapons,success_probabilities, threat_coeff):
+def genetic_algo(weapons_types_num,weapon_num_for_type, weapons, target_num, target_coeffs, success_probabilities):
     population_num=7
     bit_filp=0.5
     iteration_num=50
     population=init(7,population_num,len(weapons))
     for i in range(0,iteration_num):
-        selections=fitness_and_selection(population,threat_coeff,success_probabilities)
+        success_probabilitie=[]
+        for j in range(0,weapons_types_num):
+            for k in range (0,weapon_num_for_type[j]):
+                success_probabilitie.append(success_probabilities[j][target_num])
+        #print(success_probabilitie,target_coeffs[target_num])
+        selections=fitness_and_selection(population,target_coeffs[target_num],success_probabilitie)
         crossover_out=crossover(selections)
         mutation_out=mutation(bit_filp,crossover_out)
         population=replacement(population,mutation_out)
@@ -44,6 +49,7 @@ def genetic_algo(weapons,success_probabilities, threat_coeff):
 def WTA_input():
     weapons = []
     weapons_types_num = 0
+    weapon_num_for_type=[]
     print("Enter the weapon types and the number of instances of each type: (Enter“x” when you’re done)")
     while True:
         weapon_name = str(input())
@@ -51,8 +57,9 @@ def WTA_input():
             break
         weapon_num = int(input())
         for i in range(0, weapon_num):
-            weapons.append(weapon_name + str(i + 1))
+            weapons.append(weapon_name+str(i+1))
         weapons_types_num += 1
+        weapon_num_for_type.append(weapon_num)
     print("Enter the number of targets:")
     target_num = int(input())
     print("Enter the threat coefficient of each target:")
@@ -68,12 +75,12 @@ def WTA_input():
             s_p = float(input())
             success_probabilitie.append(s_p)
         success_probabilities.append(success_probabilitie)
-
-    return weapons_types_num,weapons,target_num,target_coeffs,success_probabilities
+    return weapons_types_num,weapon_num_for_type,weapons,target_num,target_coeffs,success_probabilities
 def WTA():
-    weapons_types_num, weapons, target_num, target_coeffs, success_probabilities= WTA_input()
-    print(weapons)
-    print(target_coeffs)
-    print(success_probabilities)
-
+    weapons_types_num,weapon_num_for_type, weapons, target_num, target_coeffs, success_probabilities= WTA_input()
+    #test
+    #weapons_types_num,weapon_num_for_type, weapons, target_num, target_coeffs, success_probabilities=3,[2, 1, 2],['tank1', 'tank2', 'air1', 'grenade1', 'grenade2'], 3, [16, 5, 10], [[0.3, 0.6, 0.5], [0.4, 0.5, 0.4], [0.1, 0.2, 0.2]]
+    print(weapons_types_num,weapon_num_for_type, weapons, target_num, target_coeffs, success_probabilities)
+    for i in range(0,target_num):
+        genetic_algo(weapons_types_num,weapon_num_for_type, weapons, i, target_coeffs, success_probabilities)
 WTA()
