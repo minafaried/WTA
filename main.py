@@ -13,12 +13,45 @@ def init(population_num, weapon_num):
     return population
 def check(population):
     pass
-def fitness_and_selection(population,threat_coeff, success_probabilities):
-    pass
+def fitness_and_selection(population,threat_coeff, success_probabilities,selectionNumber):
+    if selectionNumber %2 != 0:
+        print("Selection Must be EVEN")
+        pass
+    fitness[]
+    commulativeFitness[]
+    selection[[]]
+    for i in range(0,len(population)):
+        fitnessProcess = 0
+        for j in range(0,len(population[i])):
+            fitnessProcess += population[i][j] * threat_coeff * success_probablilities[i][j]
+        fitness.append(1\fitnessProcess)
+        commulativeFitness[0] = fitness[0]
+        for k in range(1,len(fitnessProcess-1)):
+            addProccess = comulativeFitness[k - 1] + fitness[k]
+            commulativeFitness.append(addProccess)
+        for h in range(0, selectionNumber):
+            randomNumber = random.randrange(0, commulativeFitness[len(commulativeFitness)])
+            for m in range(0, len(commulativeFitness)):
+                if randmonNumber < commulativeFitness[m]:
+                    selection.append(population[0][m])
+        return selection
 
 def crossover(selection):
-
-    pass
+    crossOver[[]]
+    tempArray1[]
+    tempArray2[]
+    for i range(0,len(selection)):
+        randomNumber = random.randomrange(0,(len(selection[i])-1))
+        for j in range (0,randomNumber):
+            tempArray1.append(selection[i][j])
+            tempArray2.append(selection[i+1][j])
+        for k in range (randomNumber, len(selection(i))):
+            tempArray1.append(selection[i+1][k]))
+            tempArray2.append(selection[i][k])
+        i+2
+        crossOver.append(tempArray1)
+        crossOver.append(tempArray2)
+    return crossOver
 def mutation(bit_filp,crossover):
 
     for i in range(0,len(crossover)):
