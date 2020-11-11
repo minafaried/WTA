@@ -19,7 +19,7 @@ def fitness_and_selection(population,threat_coeff, success_probabilities,selecti
         pass
     fitness = []
     commulativeFitness = []
-    selection = [[]]
+    selection = []
     for i in range(0,len(population)):
         fitnessProcess = 0
         for j in range(0,len(population[i])):
@@ -37,7 +37,7 @@ def fitness_and_selection(population,threat_coeff, success_probabilities,selecti
         return selection
 
 def crossover(selection):
-    crossOver = [[]]
+    crossOver = []
     tempArray1 = []
     tempArray2 = []
     for i in range(0,len(selection)):
