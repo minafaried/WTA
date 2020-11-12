@@ -52,6 +52,7 @@ def fitness_and_selection(population,threat_coeff, success_probabilities,selecti
         for m in range(0, len(commulativeFitness)):
             if randomNumber < commulativeFitness[m]:
                 selection.append(population[m])
+                break
     return selection
 
 def crossover(selection):
