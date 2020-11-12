@@ -13,21 +13,23 @@ def init(population_num, weapon_num):
             chromosome.append(r)
         population.append(chromosome)
     return population
-def check(population , target_num):
-    #selecting the coloumn of the target
-    target_col = np.array( matrix[:,[target_num-1]])
-    target_prop=[]
-    for x in range(0,len(target_col)):
-        target_prop.append(target_col[x][0])
+def check(population , success_prop):
     result_population=[]
-    propSum = 0
+    invaild=0
+    chromLen=0
     for i in range(0,len(population)):
+        propSum = 0
         for j in range (0,len(population[i])):
+            chromLen = len(population[i])
             if(population[i][j] == 1):
-                propSum += target_prop[j]
-        if(propSum <= 1):
+                propSum += success_prop[j]
+        if propSum <= 1:
             result_population.append(population[i])
-        propSum =0
+        else:
+            invaild +=1
+    new = init(invaild,chromLen)
+    if invaild > 0:
+        result_population = result_population + check(new,success_prop)
     return result_population
 def fitness_and_selection(population,threat_coeff, success_probabilities,selectionNumber):
     if selectionNumber %2 != 0:
