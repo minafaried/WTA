@@ -64,6 +64,7 @@ def crossover(selection):
         if(randomNumber == 0):
             crossOver.append(selection[i])
             crossOver.append(selection[i+1])
+            i = i + 2
             continue
         print(randomNumber)
         for j in range (0,randomNumber):
