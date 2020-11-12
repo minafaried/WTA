@@ -59,15 +59,20 @@ def crossover(selection):
     crossOver = []
     tempArray1 = []
     tempArray2 = []
-    for i in range(0,len(selection)):
-        randomNumber = random.randomrange(0,(len(selection[i])-1))
+    for i in range(0,len(selection)-1):
+        randomNumber = random.randrange(0,(len(selection[i])-1))
+        if(randomNumber == 0):
+            crossOver.append(selection[i])
+            crossOver.append(selection[i+1])
+            continue
+        print(randomNumber)
         for j in range (0,randomNumber):
             tempArray1.append(selection[i][j])
             tempArray2.append(selection[i+1][j])
-        for k in range (randomNumber, len(selection(i))):
+        for k in range (randomNumber, len(selection[i])):
             tempArray1.append(selection[i+1][k])
             tempArray2.append(selection[i][k])
-        i+2
+        i = i + 2
         crossOver.append(tempArray1)
         crossOver.append(tempArray2)
     return crossOver
