@@ -1,8 +1,7 @@
 import random
 import numpy as np
 #test for replacment & check
-matrix = np.matrix('0.7 0.6 0.5; 0.1 0.5 0.4; 0.3 0.2 0.2')
-target_num=1
+
 
 def init(population_num, weapon_num):
     population = []
@@ -41,8 +40,11 @@ def fitness_and_selection(population,threat_coeff, success_probabilities,selecti
     for i in range(0,len(population)):
         fitnessProcess = 0
         for j in range(0,len(population[i])):
-            fitnessProcess += population[i][j] * threat_coeff * success_probabilities[i][j]
-        fitness.append(1/fitnessProcess)
+            fitnessProcess += population[i][j] * threat_coeff * success_probabilities[j]
+        if fitnessProcess==0:
+            fitness.append(0)
+        else:
+            fitness.append(1 / fitnessProcess)
     commulativeFitness.append(fitness[0])
     for k in range(1,len(fitness)):
         addProccess = commulativeFitness[k - 1] + fitness[k]
@@ -67,7 +69,7 @@ def crossover(selection):
             crossOver.append(selection[i+1])
             i = i + 2
             continue
-        print(randomNumber)
+        #print(randomNumber)
         for j in range (0,randomNumber):
             tempArray1.append(selection[i][j])
             tempArray2.append(selection[i+1][j])
@@ -114,17 +116,23 @@ def genetic_algo(weapons_types_num,weapon_num_for_type, weapons, target_num, tar
     population_num=7
     bit_filp=0.5
     iteration_num=50
-    population=init(7,population_num,len(weapons))
+    selection_num=2
+    population=init(population_num,len(weapons))
+    print(population)
     for i in range(0,iteration_num):
+
         success_probabilitie=[]
         for j in range(0,weapons_types_num):
             for k in range (0,weapon_num_for_type[j]):
                 success_probabilitie.append(success_probabilities[j][target_num])
+
         #print(success_probabilitie,target_coeffs[target_num])
-        selections=fitness_and_selection(population,target_coeffs[target_num],success_probabilitie)
+        population = check(population,success_probabilitie)
+        selections=fitness_and_selection(population,target_coeffs[target_num],success_probabilitie,selection_num)
         crossover_out=crossover(selections)
         mutation_out=mutation(bit_filp,crossover_out)
-        population=replacement(population,mutation_out)
+        population=replacement(population,mutation_out,success_probabilitie)
+    print(population)
     return population
 def WTA_input():
     weapons = []
@@ -157,10 +165,11 @@ def WTA_input():
         success_probabilities.append(success_probabilitie)
     return weapons_types_num,weapon_num_for_type,weapons,target_num,target_coeffs,success_probabilities
 def WTA():
-    weapons_types_num,weapon_num_for_type, weapons, target_num, target_coeffs, success_probabilities= WTA_input()
+    #weapons_types_num,weapon_num_for_type, weapons, target_num, target_coeffs, success_probabilities= WTA_input()
     #test
-    #weapons_types_num,weapon_num_for_type, weapons, target_num, target_coeffs, success_probabilities=3,[2, 1, 2],['tank1', 'tank2', 'air1', 'grenade1', 'grenade2'], 3, [16, 5, 10], [[0.3, 0.6, 0.5], [0.4, 0.5, 0.4], [0.1, 0.2, 0.2]]
+    weapons_types_num,weapon_num_for_type, weapons, target_num, target_coeffs, success_probabilities=3,[2, 1, 2],['tank1', 'tank2', 'air1', 'grenade1', 'grenade2'], 3, [16, 5, 10], [[0.3, 0.6, 0.5], [0.4, 0.5, 0.4], [0.1, 0.2, 0.2]]
     print(weapons_types_num,weapon_num_for_type, weapons, target_num, target_coeffs, success_probabilities)
     for i in range(0,target_num):
-        genetic_algo(weapons_types_num,weapon_num_for_type, weapons, i, target_coeffs, success_probabilities)
+        res=genetic_algo(weapons_types_num,weapon_num_for_type, weapons, i, target_coeffs, success_probabilities)
+        break
 WTA()
