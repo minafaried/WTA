@@ -1,7 +1,9 @@
 import random
-import numpy as np
-#test for replacment & check
 
+population_num = 7
+bit_filp = 0.2
+iteration_num = 1
+selection_num = 2
 
 def init(population_num, weapon_num):
     population = []
@@ -85,7 +87,7 @@ def mutation(bit_filp,crossover):
     for i in range(0,len(crossover)):
         for j in range (0,len(crossover[i])):
             r= random.uniform(0, 1)
-            if(r>bit_filp):
+            if(r<=bit_filp):
                 crossover[i][j]=abs(crossover[i][j]-1)
     return crossover
 def replacement(population, mutation, success_prop):
@@ -113,12 +115,9 @@ def replacement(population, mutation, success_prop):
     return new_gen
 
 def genetic_algo(weapons_types_num,weapon_num_for_type, weapons, target_num, target_coeffs, success_probabilities):
-    population_num=7
-    bit_filp=0.5
-    iteration_num=50
-    selection_num=2
+
     population=init(population_num,len(weapons))
-    print(population)
+    print("population: ",population)
     for i in range(0,iteration_num):
 
         success_probabilitie=[]
@@ -128,9 +127,15 @@ def genetic_algo(weapons_types_num,weapon_num_for_type, weapons, target_num, tar
 
         #print(success_probabilitie,target_coeffs[target_num])
         population = check(population,success_probabilitie)
+        print("population after check: ", population)
         selections=fitness_and_selection(population,target_coeffs[target_num],success_probabilitie,selection_num)
+        print("selection: ", selections)
         crossover_out=crossover(selections)
+        print("selection after crossover: ", crossover_out)
         mutation_out=mutation(bit_filp,crossover_out)
+        print("selection after mutation: ", mutation_out)
+        mutation_out = check(mutation_out, success_probabilitie)
+        print("selection after check mutation: ", mutation_out)
         population=replacement(population,mutation_out,success_probabilitie)
     print(population)
     return population
