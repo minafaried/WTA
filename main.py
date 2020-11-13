@@ -14,13 +14,14 @@ def init(population_num, weapon_num):
             chromosome.append(r)
         population.append(chromosome)
     return population
+
 def check(population , success_prop):
     result_population=[]
     invaild=0
     chromLen=0
     for i in range(0,len(population)):
         propSum = 0
-        for j in range (0,len(population[i])):
+        for j in range(0,len(population[i])):
             chromLen = len(population[i])
             if(population[i][j] == 1):
                 propSum += success_prop[j]
@@ -32,10 +33,11 @@ def check(population , success_prop):
     if invaild > 0:
         result_population = result_population + check(new,success_prop)
     return result_population
+
 def fitness_and_selection(population,threat_coeff, success_probabilities,selectionNumber):
     if selectionNumber %2 != 0:
         print("Selection Must be EVEN")
-        pass
+        return None
     fitness = []
     commulativeFitness = []
     selection = []
@@ -66,6 +68,7 @@ def crossover(selection):
     tempArray2 = []
     for i in range(0,len(selection)-1):
         randomNumber = random.randrange(0,(len(selection[i])-1))
+        print(randomNumber)
         if(randomNumber == 0):
             crossOver.append(selection[i])
             crossOver.append(selection[i+1])
@@ -114,18 +117,30 @@ def replacement(population, mutation, success_prop):
 
     return new_gen
 
+def select_the_fittest(population,target_coeff,success_probabilitie):
+    max=0
+    index=0
+    assigned_weapons=population[0]
+    for i in range(0,len(population)):
+        sum_prop=0
+        for j in range(0,len(population[i])):
+            sum_prop+=population[i][j]*target_coeff*success_probabilitie[j]
+        if sum_prop>max:
+            max=sum_prop
+            index=i
+            assigned_weapons=population[i]
+    return assigned_weapons
 def genetic_algo(weapons_types_num,weapon_num_for_type, weapons, target_num, target_coeffs, success_probabilities):
 
     population=init(population_num,len(weapons))
     print("population: ",population)
+    success_probabilitie = []
+    for j in range(0, weapons_types_num):
+        for k in range(0, weapon_num_for_type[j]):
+            success_probabilitie.append(success_probabilities[j][target_num])
+    # print(success_probabilitie,target_coeffs[target_num])
     for i in range(0,iteration_num):
 
-        success_probabilitie=[]
-        for j in range(0,weapons_types_num):
-            for k in range (0,weapon_num_for_type[j]):
-                success_probabilitie.append(success_probabilities[j][target_num])
-
-        #print(success_probabilitie,target_coeffs[target_num])
         population = check(population,success_probabilitie)
         print("population after check: ", population)
         selections=fitness_and_selection(population,target_coeffs[target_num],success_probabilitie,selection_num)
@@ -137,8 +152,10 @@ def genetic_algo(weapons_types_num,weapon_num_for_type, weapons, target_num, tar
         mutation_out = check(mutation_out, success_probabilitie)
         print("selection after check mutation: ", mutation_out)
         population=replacement(population,mutation_out,success_probabilitie)
-    print(population)
-    return population
+    print("final population: ",population)
+    assigned_weapons=select_the_fittest(population,target_coeffs[target_num],success_probabilitie)
+    print(assigned_weapons)
+    return assigned_weapons
 def WTA_input():
     weapons = []
     weapons_types_num = 0
