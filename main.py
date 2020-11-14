@@ -253,7 +253,7 @@ def final_result(targets, weapons, success_probabilities, target_coeffs, weapon_
             if targets[i][j] == 1:
                 print(weapons[j], "is assigned to target", i+1)
                 expected_threat_of_target += success_probabilities[weapon_index[j]][i] * target_coeffs[i]
-        expected_total_threat += expected_threat_of_target
+        expected_total_threat += target_coeffs[i] - expected_threat_of_target
     return expected_total_threat
 
 print("the final result is:", WTA())
