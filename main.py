@@ -1,9 +1,9 @@
 import random
 
-population_num = 20
+population_num = 10
 bit_filp = 0.2
 iteration_num = 100
-selection_num = 4
+selection_num = 2
 
 
 def checkIfDuplicates(listOfElems):
@@ -38,7 +38,7 @@ def check(population, success_prop, target_coeff, used_weapons):
             chromLen = len(population[i])
             if (population[i][j] == 1):
                 propSum += target_coeff * success_prop[j]
-        propSum = target_coeff * 0.6 - propSum
+        propSum = target_coeff  - propSum
         if propSum >= 0:
             result_population.append(population[i])
         else:
@@ -176,7 +176,7 @@ def genetic_algo(weapons_types_num, weapon_num_for_type, weapons, target_num, ta
         population = replacement(population, mutation_out, success_probabilitie)
     print("final population: ", population)
     assigned_weapons = select_the_fittest(population, target_coeffs[target_num], success_probabilitie)
-    return assigned_weapons
+    return assigned_weapons,success_probabilitie
 
 
 def WTA_input():
@@ -217,7 +217,6 @@ def WTA():
     weapons_types_num, weapon_num_for_type, weapons, target_num, target_coeffs, success_probabilities = 3, [2, 1, 2], [
         'tank1', 'tank2', 'air1', 'grenade1', 'grenade2'], 3, [16, 5, 10], [[0.3, 0.6, 0.5], [0.4, 0.5, 0.4],
                                                                             [0.1, 0.2, 0.2]]
-    weapon_index = [0,0,1,2,2] #to get the weapon position in success matrix
     print(weapons_types_num, weapon_num_for_type, weapons, target_num, target_coeffs, success_probabilities)
     target_id = []
     for i in range(0, target_num):
@@ -229,10 +228,12 @@ def WTA():
     for j in range(0, len(weapons)):
         used_weapons.append(1)
     # print(used_weapons)
+    target_success_probabilitie=[]
     for i in range(0, target_num):
-        res = genetic_algo(weapons_types_num, weapon_num_for_type, weapons, target_id[i], target_coeffs,
+        res,success_probabilitie = genetic_algo(weapons_types_num, weapon_num_for_type, weapons, target_id[i], target_coeffs,
                            success_probabilities, used_weapons)
         targets.append(res)
+        target_success_probabilitie.append(success_probabilitie)
         # print(res)
         for j in range(0, len(res)):
             if used_weapons[j] == 1:
@@ -241,18 +242,20 @@ def WTA():
         if sum(used_weapons) == 0:
             break
     print("the final result is:", targets)
-    return final_result(targets, weapons, success_probabilities, target_coeffs, weapon_index)
+    return final_result(targets, weapons, target_coeffs, target_success_probabilitie)
 
 
 # Tank #1 is assigned to target #1,
-def final_result(targets, weapons, success_probabilities, target_coeffs, weapon_index):
+def final_result(targets, weapons, target_coeffs, target_success_probabilitie):
+    print(target_success_probabilitie)
     expected_total_threat = 0
     for i in range(0, len(targets)):
         expected_threat_of_target =0
         for j in range(0, len(targets[i])):
             if targets[i][j] == 1:
                 print(weapons[j], "is assigned to target", i+1)
-                expected_threat_of_target += success_probabilities[weapon_index[j]][i] * target_coeffs[i]
+                print(target_success_probabilitie[i][j] , target_coeffs[i])
+                expected_threat_of_target += target_success_probabilitie[i][j] * target_coeffs[i]
         expected_total_threat += target_coeffs[i] - expected_threat_of_target
     return expected_total_threat
 
